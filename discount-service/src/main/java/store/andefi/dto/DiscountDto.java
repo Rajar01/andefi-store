@@ -1,13 +1,12 @@
 package store.andefi.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.bson.types.ObjectId;
 
 import java.time.Instant;
-import java.util.UUID;
 
 public record DiscountDto(
-        @JsonProperty("id") UUID id,
-        @JsonProperty("product_id") UUID productId,
+        ObjectId id,
         @JsonProperty("discount_percentage") Long discountPercentage,
         @JsonProperty("is_active") boolean isActive,
         @JsonProperty("start_date") Instant startDate,

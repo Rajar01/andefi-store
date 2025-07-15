@@ -4,14 +4,13 @@ import io.quarkus.mongodb.panache.common.MongoEntity;
 import jakarta.validation.constraints.NotNull;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.bson.types.ObjectId;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @MongoEntity(collection = "discounts")
 public record Discount(
-        @BsonId UUID id,
-        @NotNull @BsonProperty("product_id") UUID productId,
+        @BsonId ObjectId id,
         @BsonProperty("discount_percentage") Long discountPercentage,
         @BsonProperty("is_active") boolean isActive,
         @BsonProperty("start_date") Instant startDate,

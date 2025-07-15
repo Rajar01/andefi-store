@@ -7,7 +7,6 @@ public final class DiscountMapper {
     public static DiscountDto toDto(Discount discount) {
         return new DiscountDto(
                 discount.id(),
-                discount.productId(),
                 discount.discountPercentage(),
                 discount.isActive(),
                 discount.startDate(),
