@@ -5,6 +5,6 @@ import store.andefi.entity.Media;
 
 public final class MediaMapper {
   public static MediaDto toDto(Media media) {
-    return new MediaDto(media.id(), media.urls());
+    return new MediaDto(media.id().toString(), media.urls());
   }
 }

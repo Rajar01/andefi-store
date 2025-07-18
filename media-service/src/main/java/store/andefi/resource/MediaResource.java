@@ -7,7 +7,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.bson.types.ObjectId;
 import store.andefi.dto.MediaDto;
 import store.andefi.service.MediaService;
 
@@ -18,7 +17,7 @@ public class MediaResource {
   @GET
   @Path("/{media_id}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getMediaById(@PathParam("media_id") ObjectId mediaId) {
+  public Response getMediaById(@PathParam("media_id") String mediaId) {
     MediaDto response = mediaService.getMediaById(mediaId);
 
     return Response.ok(response).build();

@@ -5,17 +5,16 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
 import org.bson.types.ObjectId;
 import store.andefi.dto.MediaDto;
-import store.andefi.entity.Media;
-import store.andefi.repository.MediaRepository;
+chimport store.andefi.repository.MediaRepository;
 import store.andefi.utility.mapper.MediaMapper;
 
 @ApplicationScoped
 public class MediaService {
   @Inject MediaRepository mediaRepository;
 
-  public MediaDto getMediaById(ObjectId mediaId) {
+  public MediaDto getMediaById(String mediaId) {
     return mediaRepository
-        .findByIdOptional(mediaId)
+        .findByIdOptional(new ObjectId(mediaId))
         .map(MediaMapper::toDto)
         .orElseThrow(NotFoundException::new);
   }
