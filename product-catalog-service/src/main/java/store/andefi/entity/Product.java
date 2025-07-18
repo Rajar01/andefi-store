@@ -18,8 +18,10 @@ public record Product(
         @NotBlank String name,
         @NotBlank String description,
         @NotNull BigDecimal price,
-        List<Category> categories,
+        @BsonProperty("category_ids") List<String> categoryIds,
         Map<String, String> attributes,
+        @BsonProperty("media_id") String mediaId,
+        @BsonProperty("discount_id") String discountId,
         @NotNull @BsonProperty("created_at") Instant createdAt,
         @NotNull @BsonProperty("updated_at") Instant updatedAt
 ) {

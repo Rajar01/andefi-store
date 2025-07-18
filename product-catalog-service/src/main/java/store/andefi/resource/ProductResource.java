@@ -8,8 +8,6 @@ import store.andefi.dto.ProductCatalogDto;
 import store.andefi.dto.ProductDto;
 import store.andefi.service.ProductService;
 
-import java.util.UUID;
-
 @Path("/api/products")
 public class ProductResource {
     @Inject
@@ -26,7 +24,7 @@ public class ProductResource {
     @GET
     @Path("/{product_id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getProductById(@PathParam("product_id") UUID productId) {
+    public Response getProductById(@PathParam("product_id") String productId) {
         ProductDto response = productService.getProductById(productId);
 
         return Response.ok(response).build();
