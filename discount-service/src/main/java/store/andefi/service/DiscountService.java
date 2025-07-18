@@ -13,8 +13,8 @@ public class DiscountService {
     @Inject
     DiscountRepository discountRepository;
 
-    public DiscountDto getDiscountById(ObjectId discountId) {
-        return discountRepository.findByIdOptional(discountId)
+    public DiscountDto getDiscountById(String discountId) {
+        return discountRepository.findByIdOptional(new ObjectId(discountId))
                 .map(DiscountMapper::toDto).orElseThrow(NotFoundException::new);
     }
 }

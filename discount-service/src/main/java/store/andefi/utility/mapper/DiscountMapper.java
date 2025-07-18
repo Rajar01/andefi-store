@@ -6,7 +6,7 @@ import store.andefi.entity.Discount;
 public final class DiscountMapper {
     public static DiscountDto toDto(Discount discount) {
         return new DiscountDto(
-                discount.id(),
+                discount.id().toString(),
                 discount.discountPercentage(),
                 discount.isActive(),
                 discount.startDate(),

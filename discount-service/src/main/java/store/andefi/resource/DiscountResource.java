@@ -7,7 +7,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.bson.types.ObjectId;
 import store.andefi.dto.DiscountDto;
 import store.andefi.service.DiscountService;
 
@@ -19,7 +18,7 @@ public class DiscountResource {
     @GET
     @Path("/{discount_id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDiscountById(@PathParam("discount_id") ObjectId discountId) {
+    public Response getDiscountById(@PathParam("discount_id") String discountId) {
         DiscountDto response = discountService.getDiscountById(discountId);
 
         return Response.ok(response).build();
