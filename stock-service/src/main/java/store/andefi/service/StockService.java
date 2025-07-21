@@ -18,12 +18,12 @@ public class StockService {
         return stockRepository.find("productId", productId).firstResultOptional().map(StockMapper::toDto).orElseThrow(NotFoundException::new);
     }
 
-    public void updateProductStock(StockUpdateDto updateStockDto) {
-        Stock stockEntity = stockRepository.find("productId", updateStockDto.productId()).firstResultOptional().orElseThrow(NotFoundException::new);
+    public void updateProductStock(StockUpdateDto stockUpdateDto) {
+        Stock stockEntity = stockRepository.find("productId", stockUpdateDto.productId()).firstResultOptional().orElseThrow(NotFoundException::new);
 
-        stockEntity.setQuantityOnHand(updateStockDto.quantityOnHand());
-        stockEntity.setReservedQuantity(updateStockDto.reservedQuantity());
-        stockEntity.setAvailableQuantity(updateStockDto.quantityOnHand() - updateStockDto.reservedQuantity());
+        stockEntity.setQuantityOnHand(stockUpdateDto.quantityOnHand());
+        stockEntity.setReservedQuantity(stockUpdateDto.reservedQuantity());
+        stockEntity.setAvailableQuantity(stockUpdateDto.quantityOnHand() - stockUpdateDto.reservedQuantity());
 
         stockRepository.persist(stockEntity);
     }
