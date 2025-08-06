@@ -20,7 +20,7 @@ object LocalDatabaseModule {
         return Room.databaseBuilder(
             context.applicationContext,
             LocalDatabase::class.java, "andefi-store"
-        ).build()
+        ).fallbackToDestructiveMigration(true).build()
     }
 
     @Provides

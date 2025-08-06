@@ -10,6 +10,8 @@ data class ProductDetailsUiState(
     val review: ReviewResponseDto? = null,
     val reviewSummary: ReviewsSummaryResponseDto? = null,
     val reviewMedia: List<MediaResponseDto> = emptyList(),
+    val isAddProductIntoCartSuccessful: Boolean = false,
+    val isAddProductIntoCartLoading: Boolean = false,
     val isLoading: Boolean = false,
     val isError: Boolean = false,
 )

@@ -23,9 +23,12 @@ class AccountRepository @Inject constructor(
                     val rawJwt = requireNotNull(response.body())
                     val jwt = JWT(rawJwt)
 
+                    accountDao.deleteAccountInformation()
+
                     accountDao.insertAccountInformation(
                         Account(
                             jwt.subject.toString(),
+                            jwt.getClaim("full_name").asString()!!,
                             jwt.getClaim("email").asString()!!,
                             jwt.getClaim("preferred_username").asString()!!,
                             rawJwt
@@ -88,6 +91,16 @@ class AccountRepository @Inject constructor(
                 200 -> Result.success(Unit)
                 else -> Result.failure(RuntimeException())
             }
+        } catch (e: Exception) {
+            return Result.failure(e)
+        }
+    }
+
+    suspend fun getAccountInformation(): Result<Account> {
+        try {
+            val account = accountDao.getAccountInformation()
+
+            return if (account != null) Result.success(account) else Result.failure(RuntimeException())
         } catch (e: Exception) {
             return Result.failure(e)
         }

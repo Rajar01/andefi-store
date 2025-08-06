@@ -31,14 +31,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.carousel.CarouselDefaults
 import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -63,6 +67,7 @@ import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.flow.flowOf
 import store.andefi.R
 import store.andefi.data.remote.dto.ProductResponseDto
+import store.andefi.ui.common.viewmodel.SharedViewModel
 import store.andefi.ui.product.viewmodel.ProductDetailsViewModel
 import store.andefi.utility.formatInstantToIndonesianDate
 import store.andefi.utility.toRupiahFormat
@@ -73,11 +78,13 @@ import java.time.Instant
 @Composable
 fun ProductDetailsScreen(
     productDetailsViewModel: ProductDetailsViewModel = hiltViewModel(),
+    sharedViewModel: SharedViewModel,
     navigateBack: () -> Unit = {},
     navigateToProductSpecificationsAndDescriptionRoute: (ProductResponseDto?) -> Unit = {},
     navigateToProductReviewAndRatingRoute: (String) -> Unit = {}
 ) {
     val productDetailsUiState by productDetailsViewModel.uiState.collectAsState()
+    val sharedUiState by sharedViewModel.uiState.collectAsState()
 
     val reviewMedia =
         if (!productDetailsUiState.isLoading) productDetailsViewModel.getProductReviewMedia(
@@ -85,59 +92,78 @@ fun ProductDetailsScreen(
         )
             .collectAsLazyPagingItems() else flowOf(PagingData.empty<String>()).collectAsLazyPagingItems()
 
-    Scaffold(topBar = {
-        TopAppBar(navigationIcon = {
-            Box(
-                contentAlignment = Alignment.Center, modifier = Modifier
-                    .size(48.dp)
-                    .clickable(
-                        interactionSource = null,
-                        indication = null,
-                        onClick = { navigateBack() })
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // Collect Snackbar events from the ViewModel's Flow
+    LaunchedEffect(key1 = Unit) {
+        productDetailsViewModel.snackbarEvent.collect { message ->
+            snackbarHostState.showSnackbar(message)
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        topBar = {
+            TopAppBar(navigationIcon = {
+                Box(
+                    contentAlignment = Alignment.Center, modifier = Modifier
+                        .size(48.dp)
+                        .clickable(
+                            interactionSource = null,
+                            indication = null,
+                            onClick = { navigateBack() })
+                ) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.outline_arrow_back_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }, title = { })
+        },
+        bottomBar = {
+            BottomAppBar(contentPadding = PaddingValues(16.dp)) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedButton(
+                        onClick = { },
+                        shape = MaterialTheme.shapes.small,
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                    ) { Text("Beli sekarang") }
+                    Button(
+                        onClick = {
+                            productDetailsViewModel.addProductIntoCart(
+                                sharedUiState.account?.jwtToken ?: ""
+                            )
+                        },
+                        shape = MaterialTheme.shapes.small,
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+                        enabled = !productDetailsUiState.isAddProductIntoCartLoading,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                    ) { Text("Masukkan keranjang") }
+                }
+
+            }
+        },
+        contentWindowInsets = WindowInsets.safeContent,
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {}, modifier = Modifier.size(80.dp)
             ) {
                 Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.outline_arrow_back_24),
+                    imageVector = ImageVector.vectorResource(R.drawable.baseline_camera_alt_24),
                     contentDescription = null,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(28.dp)
                 )
             }
-        }, title = { })
-    }, bottomBar = {
-        BottomAppBar(contentPadding = PaddingValues(16.dp)) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                OutlinedButton(
-                    onClick = { },
-                    shape = MaterialTheme.shapes.small,
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                ) { Text("Beli sekarang") }
-                Button(
-                    onClick = { },
-                    shape = MaterialTheme.shapes.small,
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                ) { Text("Masukkan keranjang") }
-            }
-
-        }
-    }, contentWindowInsets = WindowInsets.safeContent, floatingActionButton = {
-        FloatingActionButton(
-            onClick = {}, modifier = Modifier.size(80.dp)
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.baseline_camera_alt_24),
-                contentDescription = null,
-                modifier = Modifier.size(28.dp)
-            )
-        }
-    }) { paddingValues ->
+        }) { paddingValues ->
 
         Box(
             modifier = Modifier

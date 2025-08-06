@@ -19,7 +19,10 @@ import store.andefi.ui.account.screen.SignInScreen
 import store.andefi.ui.account.screen.SignUpEmailConfirmationScreen
 import store.andefi.ui.account.screen.SignUpFormScreen
 import store.andefi.ui.account.screen.SignUpSuccessScreen
+import store.andefi.ui.cart.screen.CartScreen
 import store.andefi.ui.common.navigation.navtype.ProductNavType
+import store.andefi.ui.common.viewmodel.SharedViewModel
+import store.andefi.ui.common.viewmodel.sharedViewModel
 import store.andefi.ui.product.component.BottomNavigationBar
 import store.andefi.ui.product.screen.ProductCatalogFilteredByCategoryScreen
 import store.andefi.ui.product.screen.ProductCatalogScreen
@@ -37,7 +40,12 @@ fun Navigation(navController: NavHostController) {
     NavHost(navController = navController, startDestination = AuthGraph) {
         navigation<AuthGraph>(startDestination = SignInFormRoute) {
             composable<SignInFormRoute> {
+                val sharedViewModel = it.sharedViewModel<SharedViewModel>(
+                    navController = navController
+                )
+
                 SignInScreen(
+                    sharedViewModel = sharedViewModel,
                     navigateToSignUpForm = { navController.navigate(SignUpFormRoute) },
                     navigateToForgotPassword = { navController.navigate(ForgotPasswordFormRoute) },
                     navigateToProductCatalogRoute = {
@@ -126,9 +134,14 @@ fun Navigation(navController: NavHostController) {
             }
         }
 
-        navigation<ProductGraph>(startDestination = ProductCatalogRoute) {
+        navigation<MainGraph>(startDestination = ProductCatalogRoute) {
             composable<ProductCatalogRoute> {
+                val sharedViewModel = it.sharedViewModel<SharedViewModel>(
+                    navController = navController
+                )
+
                 ProductCatalogScreen(
+                    sharedViewModel = sharedViewModel,
                     navigateToProductDetailsRoute = { navController.navigate(ProductDetailsRoute(it)) },
                     bottomNavigationBar = {
                         BottomNavigationBar(
@@ -138,8 +151,22 @@ fun Navigation(navController: NavHostController) {
                             navigateToProductCategoriesRoute = {
                                 navController.navigate(ProductCategoriesRoute)
                             },
-                            isProductCatalogRouteSelected = currentDestination?.route?.contains("ProductCatalogRoute") == true,
-                            isProductCategoriesRouteSelected = currentDestination?.route?.contains("ProductCategoriesRoute") == true,
+                            navigateToCartRoute = {
+                                navController.navigate(CartRoute)
+                            },
+                            navigateToOrderHistoryRoute = {
+                                navController.navigate(OrderHistoryRoute)
+                            },
+                            isProductCatalogRouteSelected = currentDestination?.route?.contains(
+                                ProductCatalogRoute.javaClass.typeName
+                            ) == true,
+                            isProductCategoriesRouteSelected = currentDestination?.route?.contains(
+                                ProductCategoriesRoute.javaClass.typeName
+                            ) == true,
+                            isCartRouteSelected = currentDestination?.route?.contains(CartRoute.javaClass.typeName) == true,
+                            isOrderHistoryRouteSelected = currentDestination?.route?.contains(
+                                OrderHistoryRoute.javaClass.typeName
+                            ) == true,
                         )
                     },
                 )
@@ -159,8 +186,22 @@ fun Navigation(navController: NavHostController) {
                             navigateToProductCategoriesRoute = {
                                 navController.navigate(ProductCategoriesRoute)
                             },
-                            isProductCatalogRouteSelected = currentDestination?.route?.contains("ProductCatalogRoute") == true,
-                            isProductCategoriesRouteSelected = currentDestination?.route?.contains("ProductCategoriesRoute") == true,
+                            navigateToCartRoute = {
+                                navController.navigate(CartRoute)
+                            },
+                            navigateToOrderHistoryRoute = {
+                                navController.navigate(OrderHistoryRoute)
+                            },
+                            isProductCatalogRouteSelected = currentDestination?.route?.contains(
+                                ProductCatalogRoute.javaClass.typeName
+                            ) == true,
+                            isProductCategoriesRouteSelected = currentDestination?.route?.contains(
+                                ProductCategoriesRoute.javaClass.typeName
+                            ) == true,
+                            isCartRouteSelected = currentDestination?.route?.contains(CartRoute.javaClass.typeName) == true,
+                            isOrderHistoryRouteSelected = currentDestination?.route?.contains(
+                                OrderHistoryRoute.javaClass.typeName
+                            ) == true,
                         )
                     },
                 )
@@ -177,15 +218,23 @@ fun Navigation(navController: NavHostController) {
                 )
             }
             composable<ProductDetailsRoute> {
-                ProductDetailsScreen(navigateBack = {
-                    navController.popBackStack()
-                }, navigateToProductSpecificationsAndDescriptionRoute = {
-                    navController.navigate(
-                        ProductSpecificationsAndDescriptionRoute(it)
-                    )
-                }, navigateToProductReviewAndRatingRoute = {
-                    navController.navigate(ProductReviewAndRatingRoute(it))
-                })
+                val sharedViewModel = it.sharedViewModel<SharedViewModel>(
+                    navController = navController
+                )
+
+                ProductDetailsScreen(
+                    sharedViewModel = sharedViewModel,
+                    navigateBack = {
+                        navController.popBackStack()
+                    },
+                    navigateToProductSpecificationsAndDescriptionRoute = {
+                        navController.navigate(
+                            ProductSpecificationsAndDescriptionRoute(it)
+                        )
+                    },
+                    navigateToProductReviewAndRatingRoute = {
+                        navController.navigate(ProductReviewAndRatingRoute(it))
+                    })
             }
             composable<ProductSpecificationsAndDescriptionRoute>(typeMap = mapOf(typeOf<ProductResponseDto?>() to ProductNavType)) {
                 ProductSpecificationsAndDescriptionScreen(
@@ -202,6 +251,12 @@ fun Navigation(navController: NavHostController) {
                         navController.popBackStack()
                     }, productId = args.productId
                 )
+            }
+            composable<CartRoute> {
+                CartScreen()
+            }
+            composable<OrderHistoryRoute> {
+
             }
         }
     }

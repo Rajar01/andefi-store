@@ -37,16 +37,19 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import store.andefi.ui.account.viewmodel.SignInFormViewModel
+import store.andefi.ui.common.viewmodel.SharedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun SignInScreen(
     signInFormViewModel: SignInFormViewModel = hiltViewModel(),
+    sharedViewModel: SharedViewModel,
     navigateToSignUpForm: () -> Unit,
     navigateToForgotPassword: () -> Unit,
     navigateToProductCatalogRoute: () -> Unit
 ) {
     val signInUiState by signInFormViewModel.uiState.collectAsState()
+    
     val snackbarHostState = remember { SnackbarHostState() }
 
     // Collect Snackbar events from the ViewModel's Flow
@@ -57,6 +60,7 @@ fun SignInScreen(
     }
 
     if (signInUiState.isSignInSuccessful) {
+        sharedViewModel.authenticate()
         navigateToProductCatalogRoute()
     }
 

@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import store.andefi.data.remote.api.AccountApi
+import store.andefi.data.remote.api.CartApi
 import store.andefi.data.remote.api.ProductApi
 import javax.inject.Singleton
 
@@ -22,5 +23,11 @@ object ApiModule {
     @Singleton
     fun provideProductApi(retrofit: Retrofit): ProductApi {
         return retrofit.create(ProductApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCartApi(retrofit: Retrofit): CartApi {
+        return retrofit.create(CartApi::class.java)
     }
 }

@@ -31,7 +31,7 @@ data class ResetPasswordFormRoute(val token: String)
 object ResetPasswordSuccessRoute
 
 @Serializable
-object ProductGraph
+object MainGraph
 
 @Serializable
 object ProductCatalogRoute
@@ -52,3 +52,9 @@ data class ProductSpecificationsAndDescriptionRoute(
 
 @Serializable
 data class ProductReviewAndRatingRoute(val productId: String)
+
+@Serializable
+object CartRoute
+
+@Serializable
+object OrderHistoryRoute

@@ -4,7 +4,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,6 +43,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -52,22 +56,27 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.valentinilk.shimmer.shimmer
 import store.andefi.R
+import store.andefi.ui.common.viewmodel.SharedViewModel
 import store.andefi.ui.product.component.GenericAvatarMonogram
 import store.andefi.ui.product.component.ProductCard
 import store.andefi.ui.product.viewmodel.ProductCatalogViewModel
+import store.andefi.utility.toHslColor
 
 @RequiresApi(Build.VERSION_CODES.BAKLAVA)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductCatalogScreen(
     productCatalogViewModel: ProductCatalogViewModel = hiltViewModel(),
+    sharedViewModel: SharedViewModel,
     navigateToProductDetailsRoute: (String) -> Unit,
     bottomNavigationBar: @Composable () -> Unit = {}
 ) {
     var products = productCatalogViewModel.getProducts().collectAsLazyPagingItems()
 
     val productCatalogUiState by productCatalogViewModel.uiState.collectAsState()
+    val sharedUiState by sharedViewModel.uiState.collectAsState()
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -149,12 +158,29 @@ fun ProductCatalogScreen(
                                             })
                                 )
                             } else if (!expanded) {
-                                GenericAvatarMonogram(
-                                    id = "1",
-                                    firstName = "Awang",
-                                    lastName = "Praja",
-                                    modifier = Modifier
-                                )
+                                when (sharedUiState.isLoading) {
+                                    true -> Box(
+                                        modifier = Modifier
+                                            .shimmer()
+                                            .size(48.dp),
+                                        contentAlignment = Alignment.Companion.Center
+                                    ) {
+                                        Canvas(modifier = Modifier.Companion.size(30.dp)) {
+                                            drawCircle(SolidColor(Color.LightGray))
+                                        }
+                                    }
+
+                                    false -> GenericAvatarMonogram(
+                                        id = sharedUiState.account?.id ?: "",
+                                        firstName = sharedUiState.account?.fullName?.split(" ")
+                                            ?.first()
+                                            ?: "",
+                                        lastName = sharedUiState.account?.fullName?.split(" ")
+                                            ?.last()
+                                            ?: "",
+                                        modifier = Modifier
+                                    )
+                                }
                             }
                         })
                 },

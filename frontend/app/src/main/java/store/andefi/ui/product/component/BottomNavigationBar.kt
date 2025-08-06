@@ -14,10 +14,14 @@ import store.andefi.R
 
 @Composable
 fun BottomNavigationBar(
-    navigateToProductCatalogRoute: () -> Unit,
-    navigateToProductCategoriesRoute: () -> Unit,
-    isProductCatalogRouteSelected: Boolean,
-    isProductCategoriesRouteSelected: Boolean
+    navigateToProductCatalogRoute: () -> Unit = {},
+    navigateToProductCategoriesRoute: () -> Unit = {},
+    navigateToCartRoute: () -> Unit = {},
+    navigateToOrderHistoryRoute: () -> Unit = {},
+    isProductCatalogRouteSelected: Boolean = false,
+    isProductCategoriesRouteSelected: Boolean = false,
+    isCartRouteSelected: Boolean = false,
+    isOrderHistoryRouteSelected: Boolean = false
 ) {
     NavigationBar {
         NavigationBarItem(
@@ -43,8 +47,8 @@ fun BottomNavigationBar(
             },
         )
         NavigationBarItem(
-            selected = false, label = { Text("Keranjang") },
-            onClick = { },
+            selected = isCartRouteSelected, label = { Text("Keranjang") },
+            onClick = { navigateToCartRoute() },
             icon = {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.baseline_shopping_cart_24),
@@ -54,8 +58,8 @@ fun BottomNavigationBar(
             },
         )
         NavigationBarItem(
-            selected = false, label = { Text("Pesanan") },
-            onClick = { },
+            selected = isOrderHistoryRouteSelected, label = { Text("Pesanan") },
+            onClick = { navigateToOrderHistoryRoute() },
             icon = {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.baseline_discount_24),

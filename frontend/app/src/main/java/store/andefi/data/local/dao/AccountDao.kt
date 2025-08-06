@@ -1,6 +1,7 @@
 package store.andefi.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -14,6 +15,9 @@ interface AccountDao {
 
     @Update
     suspend fun updateAccountInformation(account: Account)
+
+    @Query("DELETE FROM account")
+    suspend fun deleteAccountInformation()
 
     @Query("SELECT * FROM account LIMIT 1")
     suspend fun getAccountInformation(): Account?
