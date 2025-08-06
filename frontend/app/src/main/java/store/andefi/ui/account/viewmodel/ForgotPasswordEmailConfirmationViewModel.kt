@@ -9,13 +9,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import store.andefi.service.AccountService
+import store.andefi.data.repository.AccountRepository
 import store.andefi.ui.account.state.ForgotPasswordEmailConfirmationUiState
 import javax.inject.Inject
 
 @HiltViewModel
 class ForgotPasswordEmailConfirmationViewModel @Inject constructor(
-    private val accountService: AccountService
+    private val accountRepository: AccountRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ForgotPasswordEmailConfirmationUiState())
     val uiState: StateFlow<ForgotPasswordEmailConfirmationUiState> = _uiState.asStateFlow()
@@ -27,7 +27,7 @@ class ForgotPasswordEmailConfirmationViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
 
-            accountService.sendPasswordResetEmail(email)
+            accountRepository.sendPasswordResetEmail(email)
                 .onSuccess {
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,

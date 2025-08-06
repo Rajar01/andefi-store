@@ -1,30 +1,54 @@
 package store.andefi.ui.common.navigation
 
 import kotlinx.serialization.Serializable
+import store.andefi.data.remote.dto.ProductResponseDto
 
 @Serializable
 object AuthGraph
 
 @Serializable
-object SignInForm
+object SignInFormRoute
 
 @Serializable
-object SignUpForm
+object SignUpFormRoute
 
 @Serializable
-data class SignUpEmailConfirmation(val email: String)
+data class SignUpEmailConfirmationRoute(val email: String)
 
 @Serializable
-object SignUpSuccess
+object SignUpSuccessRoute
 
 @Serializable
-object ForgotPasswordForm
+object ForgotPasswordFormRoute
 
 @Serializable
-data class ForgotPasswordEmailConfirmation(val email: String)
+data class ForgotPasswordEmailConfirmationRoute(val email: String)
 
 @Serializable
-data class ResetPasswordForm(val token: String)
+data class ResetPasswordFormRoute(val token: String)
 
 @Serializable
-object ResetPasswordSuccess
+object ResetPasswordSuccessRoute
+
+@Serializable
+object ProductGraph
+
+@Serializable
+object ProductCatalogRoute
+
+@Serializable
+object ProductCategoriesRoute
+
+@Serializable
+data class ProductCatalogFilteredByCategoryRoute(val category: String)
+
+@Serializable
+data class ProductDetailsRoute(val productId: String)
+
+@Serializable
+data class ProductSpecificationsAndDescriptionRoute(
+    val product: ProductResponseDto?
+)
+
+@Serializable
+data class ProductReviewAndRatingRoute(val productId: String)

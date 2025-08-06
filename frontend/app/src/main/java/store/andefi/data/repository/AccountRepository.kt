@@ -1,4 +1,4 @@
-package store.andefi.service
+package store.andefi.data.repository
 
 import com.auth0.android.jwt.JWT
 import store.andefi.data.local.dao.AccountDao
@@ -10,7 +10,7 @@ import store.andefi.data.remote.dto.ResendAccountVerificationEmailRequestDto
 import store.andefi.exception.AuthenticationFailedException
 import javax.inject.Inject
 
-class AccountService @Inject constructor(
+class AccountRepository @Inject constructor(
     private val accountDao: AccountDao,
     private val accountApi: AccountApi
 ) {

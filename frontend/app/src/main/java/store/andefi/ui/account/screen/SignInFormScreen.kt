@@ -43,7 +43,8 @@ import store.andefi.ui.account.viewmodel.SignInFormViewModel
 fun SignInScreen(
     signInFormViewModel: SignInFormViewModel = hiltViewModel(),
     navigateToSignUpForm: () -> Unit,
-    navigateToForgotPassword: () -> Unit
+    navigateToForgotPassword: () -> Unit,
+    navigateToProductCatalogRoute: () -> Unit
 ) {
     val signInUiState by signInFormViewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -53,6 +54,10 @@ fun SignInScreen(
         signInFormViewModel.snackbarEvent.collect { message ->
             snackbarHostState.showSnackbar(message)
         }
+    }
+
+    if (signInUiState.isSignInSuccessful) {
+        navigateToProductCatalogRoute()
     }
 
     Scaffold(

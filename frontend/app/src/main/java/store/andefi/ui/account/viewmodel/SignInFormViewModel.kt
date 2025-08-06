@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import store.andefi.data.remote.dto.AccountSignInRequestDto
 import store.andefi.exception.AuthenticationFailedException
-import store.andefi.service.AccountService
+import store.andefi.data.repository.AccountRepository
 import store.andefi.ui.account.state.SignInFormUiState
 import javax.inject.Inject
 
 @HiltViewModel
 class SignInFormViewModel @Inject constructor(
-    private val accountService: AccountService
+    private val accountRepository: AccountRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignInFormUiState())
@@ -44,7 +44,7 @@ class SignInFormViewModel @Inject constructor(
             val password = _uiState.value.password
             val accountSignInRequestDto = AccountSignInRequestDto(email, password)
 
-            accountService.signIn(accountSignInRequestDto)
+            accountRepository.signIn(accountSignInRequestDto)
                 .onSuccess { _ ->
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
