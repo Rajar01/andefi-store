@@ -47,16 +47,21 @@ class SharedViewModel @Inject constructor(
             accountRepository.getAccountInformation()
                 .onSuccess {
                     _uiState.value =
-                        _uiState.value.copy(isLoading = false, isError = false, account = it)
+                        _uiState.value.copy(
+                            isLoading = false,
+                            isError = false,
+                            account = it,
+                            isAuthenticated = true
+                        )
                 }
                 .onFailure {
                     _uiState.value =
-                        _uiState.value.copy(isLoading = false, isError = true)
+                        _uiState.value.copy(
+                            isLoading = false,
+                            isError = true,
+                            isAuthenticated = false
+                        )
                 }
         }
-    }
-
-    fun authenticate() {
-        _uiState.value = _uiState.value.copy(isAuthenticated = true)
     }
 }

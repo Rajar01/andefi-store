@@ -249,11 +249,21 @@ fun Navigation(navController: NavHostController) {
                 ProductReviewAndRatingScreen(
                     navigateBack = {
                         navController.popBackStack()
-                    }, productId = args.productId
+                    },
+                    productId = args.productId
                 )
             }
             composable<CartRoute> {
-                CartScreen()
+                val sharedViewModel = it.sharedViewModel<SharedViewModel>(
+                    navController = navController,
+                )
+
+                CartScreen(
+                    sharedViewModel = sharedViewModel,
+                    navigateBack = {
+                        navController.popBackStack()
+                    },
+                )
             }
             composable<OrderHistoryRoute> {
 

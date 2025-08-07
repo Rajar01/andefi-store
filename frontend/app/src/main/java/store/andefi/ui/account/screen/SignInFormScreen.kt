@@ -49,7 +49,7 @@ fun SignInScreen(
     navigateToProductCatalogRoute: () -> Unit
 ) {
     val signInUiState by signInFormViewModel.uiState.collectAsState()
-    
+
     val snackbarHostState = remember { SnackbarHostState() }
 
     // Collect Snackbar events from the ViewModel's Flow
@@ -60,7 +60,6 @@ fun SignInScreen(
     }
 
     if (signInUiState.isSignInSuccessful) {
-        sharedViewModel.authenticate()
         navigateToProductCatalogRoute()
     }
 

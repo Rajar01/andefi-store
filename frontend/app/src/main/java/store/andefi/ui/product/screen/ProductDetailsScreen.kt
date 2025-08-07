@@ -173,6 +173,7 @@ fun ProductDetailsScreen(
                 )
                 .fillMaxSize()
         ) {
+            // TODO: Handle if product detail failed to load
             when (productDetailsUiState.isLoading) {
                 true -> Box(
                     modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
