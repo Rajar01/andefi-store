@@ -68,6 +68,8 @@ import coil3.request.ImageRequest
 import coil3.util.DebugLogger
 import com.valentinilk.shimmer.shimmer
 import store.andefi.R
+import store.andefi.data.remote.dto.OrderCheckoutRequestDto
+import store.andefi.data.remote.dto.OrderItemCheckoutRequestDto
 import store.andefi.ui.cart.state.CartUiState
 import store.andefi.ui.cart.viewmodel.CartViewModel
 import store.andefi.ui.common.viewmodel.SharedViewModel
@@ -81,6 +83,7 @@ fun CartScreen(
     cartViewModel: CartViewModel = hiltViewModel(),
     sharedViewModel: SharedViewModel,
     navigateBack: () -> Unit = {},
+    navigateToCheckoutRoute: (OrderCheckoutRequestDto) -> Unit = {},
 ) {
     val cartUiState by cartViewModel.uiState.collectAsState()
     val sharedUiState by sharedViewModel.uiState.collectAsState()
@@ -147,7 +150,7 @@ fun CartScreen(
                         totalAmount += (discountPrice * it.quantity)
                         totalDiscount += ((it.product.price * it.quantity) - (discountPrice * it.quantity))
                     } else {
-                        it.product.price.toRupiahFormat()
+                        totalAmount += (it.product.price * it.quantity)
                     }
                 }
             }
@@ -164,10 +167,16 @@ fun CartScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         Checkbox(
-                            checked = if (cartUiState is CartUiState.Success)
-                                (cartUiState as CartUiState.Success).cartItemsChecked.containsAll(
-                                    (cartUiState as CartUiState.Success).cart.cartItems
-                                ) && (cartUiState as CartUiState.Success).cart.cartItems.isNotEmpty() else false,
+                            checked = if (cartUiState is CartUiState.Success) {
+                                val cartItemIds =
+                                    (cartUiState as CartUiState.Success).cart.cartItems.map { it.id }
+                                val cartItemCheckedIds =
+                                    (cartUiState as CartUiState.Success).cartItemsChecked.map { it.id }
+
+                                cartItemCheckedIds.containsAll(cartItemIds) && (cartUiState as CartUiState.Success).cart.cartItems.isNotEmpty()
+                            } else {
+                                false
+                            },
                             onCheckedChange = { if (it) cartViewModel.onCartItemCheckedAllChange() else cartViewModel.onCartItemUnCheckedAllChange() },
                             modifier = Modifier
                                 .size(18.dp)
@@ -207,7 +216,9 @@ fun CartScreen(
                             }
                         }
                         Button(
-                            onClick = { },
+                            onClick = {
+                                
+                            },
                             shape = MaterialTheme.shapes.medium,
                             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                         ) { Text("Checkout") }
@@ -358,9 +369,9 @@ fun CartScreen(
                                     .fillMaxWidth()
                             ) {
                                 Checkbox(
-                                    checked = (cartUiState as CartUiState.Success).cartItemsChecked.contains(
-                                        (cartUiState as CartUiState.Success).cart.cartItems[it]
-                                    ),
+                                    checked = (cartUiState as CartUiState.Success).cartItemsChecked.any { cartItemChecked ->
+                                        cartItemChecked.id == (cartUiState as CartUiState.Success).cart.cartItems[it].id
+                                    },
                                     onCheckedChange = { _ ->
                                         cartViewModel.onCartItemCheckedChange((cartUiState as CartUiState.Success).cart.cartItems[it])
                                     },
