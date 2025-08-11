@@ -79,11 +79,11 @@ public class OrderService {
 
                   long totalAmountBeforeDiscount =
                       orderItemEntity.getProductPrice() * orderItemEntity.getQuantity();
-                  long totalDiscount =
+                  long totalDiscount = isProductDiscountValid ?
                       orderItemEntity.getProductDiscountPercentage()
                           * orderItemEntity.getProductPrice()
                           * orderItemEntity.getQuantity()
-                          / 100;
+                          / 100 : 0;
                   long totalAmountAfterDiscount = totalAmountBeforeDiscount - totalDiscount;
 
                   orderCheckoutResponseDto.setTotalAmountBeforeDiscount(
