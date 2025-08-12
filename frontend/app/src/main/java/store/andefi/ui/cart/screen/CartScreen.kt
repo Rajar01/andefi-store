@@ -217,7 +217,20 @@ fun CartScreen(
                         }
                         Button(
                             onClick = {
-                                
+                                if (cartUiState is CartUiState.Success) {
+                                    val orderItemCheckoutRequestDtos =
+                                        (cartUiState as CartUiState.Success).cartItemsChecked.map {
+                                            OrderItemCheckoutRequestDto(
+                                                productId = it.product.id,
+                                                quantity = it.quantity
+                                            )
+                                        }.toMutableList()
+
+                                    val orderCheckoutRequestDto =
+                                        OrderCheckoutRequestDto(orderItemCheckoutRequestDtos)
+
+                                    navigateToCheckoutRoute(orderCheckoutRequestDto)
+                                }
                             },
                             shape = MaterialTheme.shapes.medium,
                             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),

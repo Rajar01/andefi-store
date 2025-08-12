@@ -3,7 +3,7 @@ package store.andefi.data.remote.dto
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import store.andefi.utility.InstantSerializer
+import store.andefi.utility.serializer.InstantSerializer
 import java.time.Instant
 
 

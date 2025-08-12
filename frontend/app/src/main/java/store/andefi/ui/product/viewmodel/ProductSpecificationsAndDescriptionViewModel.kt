@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import store.andefi.data.remote.dto.ProductResponseDto
 import store.andefi.ui.common.navigation.ProductSpecificationsAndDescriptionRoute
-import store.andefi.ui.common.navigation.navtype.ProductNavType
+import store.andefi.ui.common.navigation.navtype.ProductResponseDtoNavType
 import store.andefi.ui.product.state.ProductSpecificationsAndDescriptionUiState
 import javax.inject.Inject
 import kotlin.reflect.typeOf
@@ -19,7 +19,7 @@ class ProductSpecificationsAndDescriptionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val args =
-        savedStateHandle.toRoute<ProductSpecificationsAndDescriptionRoute>(typeMap = mapOf(typeOf<ProductResponseDto?>() to ProductNavType))
+        savedStateHandle.toRoute<ProductSpecificationsAndDescriptionRoute>(typeMap = mapOf(typeOf<ProductResponseDto?>() to ProductResponseDtoNavType))
 
     private val _uiState = MutableStateFlow(ProductSpecificationsAndDescriptionUiState())
     val uiState: StateFlow<ProductSpecificationsAndDescriptionUiState> = _uiState.asStateFlow()

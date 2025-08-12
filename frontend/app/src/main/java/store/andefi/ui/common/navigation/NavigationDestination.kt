@@ -1,6 +1,8 @@
 package store.andefi.ui.common.navigation
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import store.andefi.data.remote.dto.OrderCheckoutRequestDto
 import store.andefi.data.remote.dto.ProductResponseDto
 
 @Serializable
@@ -58,3 +60,18 @@ object CartRoute
 
 @Serializable
 object OrderHistoryRoute
+
+@Serializable
+data class CheckoutRoute(val orderCheckoutRequestDto: OrderCheckoutRequestDto)
+
+@Serializable
+object ShippingAddressRoute
+
+@Serializable
+data class PaymentSuccessRoute(@SerialName("order_id") val orderId: String)
+
+@Serializable
+object PaymentFailedRoute
+
+@Serializable
+data class OrderDetailRoute(@SerialName("order_id") val orderId: String)

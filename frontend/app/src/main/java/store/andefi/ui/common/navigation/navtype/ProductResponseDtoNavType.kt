@@ -7,7 +7,7 @@ import store.andefi.data.remote.dto.ProductResponseDto
 import java.net.URLDecoder
 import java.net.URLEncoder
 
-object ProductNavType : NavType<ProductResponseDto>(isNullableAllowed = true) {
+object ProductResponseDtoNavType : NavType<ProductResponseDto>(isNullableAllowed = true) {
     override fun put(
         bundle: SavedState,
         key: String,

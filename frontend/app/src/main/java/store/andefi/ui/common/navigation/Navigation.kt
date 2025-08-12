@@ -10,6 +10,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import store.andefi.data.remote.dto.OrderCheckoutRequestDto
 import store.andefi.data.remote.dto.ProductResponseDto
 import store.andefi.ui.account.screen.ForgotPasswordEmailConfirmationScreen
 import store.andefi.ui.account.screen.ForgotPasswordFormScreen
@@ -20,9 +21,16 @@ import store.andefi.ui.account.screen.SignUpEmailConfirmationScreen
 import store.andefi.ui.account.screen.SignUpFormScreen
 import store.andefi.ui.account.screen.SignUpSuccessScreen
 import store.andefi.ui.cart.screen.CartScreen
-import store.andefi.ui.common.navigation.navtype.ProductNavType
+import store.andefi.ui.common.navigation.navtype.OrderCheckoutRequestDtoNavType
+import store.andefi.ui.common.navigation.navtype.ProductResponseDtoNavType
 import store.andefi.ui.common.viewmodel.SharedViewModel
 import store.andefi.ui.common.viewmodel.sharedViewModel
+import store.andefi.ui.order.screen.CheckoutScreen
+import store.andefi.ui.order.screen.OrderHistoryScreen
+import store.andefi.ui.order.screen.OrderDetailScreen
+import store.andefi.ui.order.screen.PaymentFailedScreen
+import store.andefi.ui.order.screen.PaymentSuccessScreen
+import store.andefi.ui.order.screen.ShippingAddressScreen
 import store.andefi.ui.product.component.BottomNavigationBar
 import store.andefi.ui.product.screen.ProductCatalogFilteredByCategoryScreen
 import store.andefi.ui.product.screen.ProductCatalogScreen
@@ -71,7 +79,8 @@ fun Navigation(navController: NavHostController) {
             }
             composable<SignUpSuccessRoute>(
                 deepLinks = listOf(
-                    navDeepLink { uriPattern = "https://andefi.store/accounts/verified" })
+                    navDeepLink { uriPattern = "https://andefi.store/accounts/verified" }
+                )
             ) {
                 SignUpSuccessScreen(
                     navigateToSignInForm = {
@@ -116,11 +125,13 @@ fun Navigation(navController: NavHostController) {
                         navController.navigate(
                             ResetPasswordSuccessRoute
                         )
-                    }, navigateToSignInForm = {
+                    },
+                    navigateToSignInForm = {
                         navController.navigate(
                             SignInFormRoute
                         )
-                    }, token = args.token
+                    },
+                    token = args.token
                 )
             }
             composable<ResetPasswordSuccessRoute> {
@@ -236,7 +247,7 @@ fun Navigation(navController: NavHostController) {
                         navController.navigate(ProductReviewAndRatingRoute(it))
                     })
             }
-            composable<ProductSpecificationsAndDescriptionRoute>(typeMap = mapOf(typeOf<ProductResponseDto?>() to ProductNavType)) {
+            composable<ProductSpecificationsAndDescriptionRoute>(typeMap = mapOf(typeOf<ProductResponseDto?>() to ProductResponseDtoNavType)) {
                 ProductSpecificationsAndDescriptionScreen(
                     navigateBack = {
                         navController.popBackStack()
@@ -263,10 +274,135 @@ fun Navigation(navController: NavHostController) {
                     navigateBack = {
                         navController.popBackStack()
                     },
+                    navigateToCheckoutRoute = { orderCheckoutRequestDto ->
+                        navController.navigate(CheckoutRoute(orderCheckoutRequestDto))
+                    }
+                )
+            }
+            composable<CheckoutRoute>(typeMap = mapOf(typeOf<OrderCheckoutRequestDto>() to OrderCheckoutRequestDtoNavType)) {
+                val sharedViewModel = it.sharedViewModel<SharedViewModel>(
+                    navController = navController,
+                )
+
+                CheckoutScreen(
+                    sharedViewModel = sharedViewModel,
+                    navigateBack = {
+                        navController.popBackStack()
+                    },
+                    navigateToShippingAddressRoute = {
+                        navController.navigate(ShippingAddressRoute)
+                    },
+                    navigateToOrderDetailRoute = { orderId ->
+                        navController.navigate(OrderDetailRoute(orderId))
+                    }
+                )
+            }
+            composable<ShippingAddressRoute> {
+                ShippingAddressScreen()
+            }
+            composable<PaymentSuccessRoute>(
+                deepLinks = listOf(
+                    navDeepLink {
+                        uriPattern =
+                            "https://andefi.store/payment/finish?order_id={order_id}"
+                    },
+                    navDeepLink {
+                        uriPattern =
+                            "https://andefi.store/payment/finish?order_id={order_id}&status_code=200&transaction_status=settlement"
+                    }
+                )
+            ) {
+                val args = it.toRoute<PaymentSuccessRoute>()
+
+                PaymentSuccessScreen(navigateToOrderDetailRoute = {
+                    navController.navigate(OrderDetailRoute(args.orderId))
+                })
+            }
+            composable<PaymentFailedRoute>(
+                deepLinks = listOf(
+                    navDeepLink {
+                        uriPattern =
+                            "https://andefi.store/payment/finish?order_id={order_id}&status_code=202&transaction_status=failure"
+                    },
+                    navDeepLink {
+                        uriPattern =
+                            "https://andefi.store/payment/finish?order_id={order_id}&status_code=202&transaction_status=deny"
+                    },
+                    navDeepLink {
+                        uriPattern =
+                            "https://andefi.store/payment/finish?order_id={order_id}&status_code=202&transaction_status=expire"
+                    },
+                    navDeepLink {
+                        uriPattern =
+                            "https://andefi.store/payment/error"
+                    }
+                )
+            ) {
+                PaymentFailedScreen(
+                    navigateToOrderHistoryRoute = {
+                        navController.navigate(OrderHistoryRoute)
+                    }
+                )
+            }
+            composable<OrderDetailRoute>(
+                deepLinks = listOf(
+                    navDeepLink {
+                        uriPattern =
+                            "https://andefi.store/payment/finish?order_id={order_id}&status_code=201&transaction_status=pending&action=back"
+                    }
+                )
+            ) {
+                val sharedViewModel = it.sharedViewModel<SharedViewModel>(
+                    navController = navController,
+                )
+
+                OrderDetailScreen(
+                    sharedViewModel = sharedViewModel,
+                    navigateToOrderHistoryRoute = {
+                        navController.navigate(OrderHistoryRoute)
+                    },
                 )
             }
             composable<OrderHistoryRoute> {
+                val sharedViewModel = it.sharedViewModel<SharedViewModel>(
+                    navController = navController,
+                )
 
+                OrderHistoryScreen(
+                    sharedViewModel = sharedViewModel,
+                    navigateToProductCatalogRoute = {
+                        navController.navigate(ProductCatalogRoute)
+                    },
+                    navigateToOrderDetailRoute = { orderId ->
+                        navController.navigate(OrderDetailRoute(orderId))
+                    },
+                    bottomNavigationBar = {
+                        BottomNavigationBar(
+                            navigateToProductCatalogRoute = {
+                                navController.navigate(ProductCatalogRoute)
+                            },
+                            navigateToProductCategoriesRoute = {
+                                navController.navigate(ProductCategoriesRoute)
+                            },
+                            navigateToCartRoute = {
+                                navController.navigate(CartRoute)
+                            },
+                            navigateToOrderHistoryRoute = {
+                                navController.navigate(OrderHistoryRoute)
+                            },
+                            isProductCatalogRouteSelected = currentDestination?.route?.contains(
+                                ProductCatalogRoute.javaClass.typeName
+                            ) == true,
+                            isProductCategoriesRouteSelected = currentDestination?.route?.contains(
+                                ProductCategoriesRoute.javaClass.typeName
+                            ) == true,
+                            isCartRouteSelected = currentDestination?.route?.contains(CartRoute.javaClass.typeName) == true,
+                            isOrderHistoryRouteSelected = currentDestination?.route?.contains(
+                                OrderHistoryRoute.javaClass.typeName
+                            ) == true,
+                        )
+                    }
+                )
             }
         }
     }

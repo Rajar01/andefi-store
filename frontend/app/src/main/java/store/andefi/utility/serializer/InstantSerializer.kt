@@ -1,4 +1,4 @@
-package store.andefi.utility
+package store.andefi.utility.serializer
 
 import android.os.Build
 import androidx.annotation.RequiresApi

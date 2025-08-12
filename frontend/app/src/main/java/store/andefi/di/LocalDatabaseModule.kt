@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import store.andefi.data.local.LocalDatabase
 import store.andefi.data.local.dao.AccountDao
+import store.andefi.data.local.dao.PaymentDao
 import javax.inject.Singleton
 
 @Module
@@ -27,5 +28,11 @@ object LocalDatabaseModule {
     @Singleton
     fun provideAccountDao(localDatabase: LocalDatabase): AccountDao {
         return localDatabase.accountDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providePaymentDao(localDatabase: LocalDatabase): PaymentDao {
+        return localDatabase.paymentDao()
     }
 }
