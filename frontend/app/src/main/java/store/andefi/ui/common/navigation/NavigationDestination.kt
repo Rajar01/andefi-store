@@ -75,3 +75,6 @@ object PaymentFailedRoute
 
 @Serializable
 data class OrderDetailRoute(@SerialName("order_id") val orderId: String)
+
+@Serializable
+object ProductArRoute

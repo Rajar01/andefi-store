@@ -81,7 +81,8 @@ fun ProductDetailsScreen(
     sharedViewModel: SharedViewModel,
     navigateBack: () -> Unit = {},
     navigateToProductSpecificationsAndDescriptionRoute: (ProductResponseDto?) -> Unit = {},
-    navigateToProductReviewAndRatingRoute: (String) -> Unit = {}
+    navigateToProductReviewAndRatingRoute: (String) -> Unit = {},
+    navigateToProductArRoute: () -> Unit = {}
 ) {
     val productDetailsUiState by productDetailsViewModel.uiState.collectAsState()
     val sharedUiState by sharedViewModel.uiState.collectAsState()
@@ -155,7 +156,7 @@ fun ProductDetailsScreen(
         contentWindowInsets = WindowInsets.safeContent,
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {}, modifier = Modifier.size(80.dp)
+                onClick = { navigateToProductArRoute() }, modifier = Modifier.size(80.dp)
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.baseline_camera_alt_24),

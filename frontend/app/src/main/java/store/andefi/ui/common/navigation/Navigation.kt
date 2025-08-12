@@ -26,12 +26,13 @@ import store.andefi.ui.common.navigation.navtype.ProductResponseDtoNavType
 import store.andefi.ui.common.viewmodel.SharedViewModel
 import store.andefi.ui.common.viewmodel.sharedViewModel
 import store.andefi.ui.order.screen.CheckoutScreen
-import store.andefi.ui.order.screen.OrderHistoryScreen
 import store.andefi.ui.order.screen.OrderDetailScreen
+import store.andefi.ui.order.screen.OrderHistoryScreen
 import store.andefi.ui.order.screen.PaymentFailedScreen
 import store.andefi.ui.order.screen.PaymentSuccessScreen
 import store.andefi.ui.order.screen.ShippingAddressScreen
 import store.andefi.ui.product.component.BottomNavigationBar
+import store.andefi.ui.product.screen.ProductARScreen
 import store.andefi.ui.product.screen.ProductCatalogFilteredByCategoryScreen
 import store.andefi.ui.product.screen.ProductCatalogScreen
 import store.andefi.ui.product.screen.ProductCategoriesScreen
@@ -245,7 +246,11 @@ fun Navigation(navController: NavHostController) {
                     },
                     navigateToProductReviewAndRatingRoute = {
                         navController.navigate(ProductReviewAndRatingRoute(it))
-                    })
+                    },
+                    navigateToProductArRoute = {
+                        navController.navigate(ProductArRoute)
+                    }
+                )
             }
             composable<ProductSpecificationsAndDescriptionRoute>(typeMap = mapOf(typeOf<ProductResponseDto?>() to ProductResponseDtoNavType)) {
                 ProductSpecificationsAndDescriptionScreen(
@@ -402,6 +407,13 @@ fun Navigation(navController: NavHostController) {
                             ) == true,
                         )
                     }
+                )
+            }
+            composable<ProductArRoute> {
+                ProductARScreen(
+                    navigateBack = {
+                        navController.popBackStack()
+                    },
                 )
             }
         }

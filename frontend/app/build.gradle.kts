@@ -90,4 +90,6 @@ dependencies {
     implementation("androidx.paging:paging-compose:3.2.1")
 
     implementation("com.valentinilk.shimmer:compose-shimmer:1.3.3")
+
+    implementation("io.github.sceneview:arsceneview:2.3.0")
 }

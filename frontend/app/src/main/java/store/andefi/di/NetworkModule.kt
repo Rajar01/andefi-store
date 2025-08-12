@@ -35,7 +35,7 @@ object NetworkModule {
         }
 
         // TODO: Save base url into env variable
-        return Retrofit.Builder().baseUrl("http://10.0.2.2:8080/")
+        return Retrofit.Builder().baseUrl("http://localhost:8080/")
             .client(okHttpClient)
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))

@@ -410,7 +410,10 @@ fun OrderDetailScreen(
                                         fontWeight = FontWeight.Normal,
                                     )
                                     Text(
-                                        (orderDetailUiState as OrderDetailUiState.Success).order.id,
+                                        (orderDetailUiState as OrderDetailUiState.Success).order.id.substring(
+                                            0,
+                                            20
+                                        ) + "...",
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontWeight = FontWeight.Normal,
                                     )
