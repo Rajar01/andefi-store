@@ -16,6 +16,8 @@ import org.hibernate.type.SqlTypes;
 public class Product {
   @Id private UUID id;
   private String name;
+
+  @Column(columnDefinition = "TEXT")
   private String description;
   private long price;
 

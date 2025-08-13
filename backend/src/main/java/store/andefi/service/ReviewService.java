@@ -112,7 +112,10 @@ public class ReviewService {
     long totalRating = reviewEntities.size();
 
     float averageRating =
-        reviewEntities.stream().map(Review::getRating).reduce(0f, Float::sum) / (float) totalRating;
+        !reviewEntities.isEmpty()
+            ? reviewEntities.stream().map(Review::getRating).reduce(0f, Float::sum)
+                / (float) totalRating
+            : 0;
 
     ReviewsSummaryDto reviewsSummaryDto = new ReviewsSummaryDto();
     reviewsSummaryDto.setProductId(productId);

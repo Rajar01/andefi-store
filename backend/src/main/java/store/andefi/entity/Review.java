@@ -11,7 +11,9 @@ import lombok.Data;
 public class Review {
   @Id private UUID id;
 
+  @Column(columnDefinition = "TEXT")
   private String content;
+
   private float rating;
 
   @ManyToOne

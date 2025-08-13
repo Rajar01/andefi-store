@@ -40,25 +40,25 @@ public class PaymentService {
     creditCard.put("secure", "true");
 
     // Item details
-    AtomicLong totalAmountAfterDiscount = new AtomicLong();
+    AtomicLong grossAmount = new AtomicLong();
     List<Map<String, String>> itemDetails =
         orderEntity.getOrderItems().stream()
             .map(
                 it -> {
                   // Price after discount
-                  long totalAmountBeforeDiscount = it.getProductPrice() * it.getQuantity();
+                  long totalAmountBeforeDiscount = it.getProductPrice() ;
                   long totalDiscount =
                       it.getProductDiscountPercentage()
                           * it.getProductPrice()
-                          * it.getQuantity()
                           / 100;
-                  totalAmountAfterDiscount.set(totalAmountBeforeDiscount - totalDiscount);
+                  long totalAmountAfterDiscount = totalAmountBeforeDiscount - totalDiscount;
+                  grossAmount.set(grossAmount.get() + (totalAmountAfterDiscount * it.getQuantity()));
 
                   return Map.of(
                       "name",
                       it.getProduct().getName().substring(0, 50),
                       "price",
-                      String.valueOf(totalAmountAfterDiscount.get() / it.getQuantity()),
+                      String.valueOf(totalAmountAfterDiscount),
                       "quantity",
                       String.valueOf(it.getQuantity()),
                       "id",
@@ -69,7 +69,7 @@ public class PaymentService {
     // Transaction details
     Map<String, String> transactionDetails = new HashMap<>();
     transactionDetails.put("order_id", orderEntity.getId().toString());
-    transactionDetails.put("gross_amount", String.valueOf(totalAmountAfterDiscount.get()));
+    transactionDetails.put("gross_amount", String.valueOf(grossAmount.get()));
 
     // Customer details
     Account accountEntity = orderEntity.getAccount();
@@ -87,7 +87,7 @@ public class PaymentService {
     Midtrans.serverKey = midtransServerKey;
     Midtrans.isProduction = midtransIsProduction;
 
-    return SnapApi.createTransactionToken(params);
+    return SnapApi.createTransactionRedirectUrl(params);
   }
 
   @Transactional

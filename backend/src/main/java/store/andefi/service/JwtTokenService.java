@@ -21,6 +21,7 @@ public class JwtTokenService {
         .issuedAt(now)
         .expiresAt(now.plus(Duration.ofMinutes(5)))
         .groups(accountDto.getRoles())
+        .claim(Claims.full_name.name(), accountDto.getFullName())
         .claim(Claims.email.name(), accountDto.getEmail())
         .claim(Claims.preferred_username.name(), accountDto.getUsername())
         .sign();

@@ -69,21 +69,24 @@ public class OrderService {
                   boolean isProductDiscountValid =
                       !now.isBefore(productEntity.getDiscount().getStartDate())
                           && !now.isAfter(productEntity.getDiscount().getEndDate());
-                  orderItemEntity.setProductDiscountPercentage(
-                      isProductDiscountValid
-                          ? productEntity.getDiscount().getDiscountPercentage()
-                          : 1);
+
+                  if (isProductDiscountValid) {
+                    orderItemEntity.setProductDiscountPercentage(
+                        productEntity.getDiscount().getDiscountPercentage());
+                  } else {
+                    orderItemEntity.setProductDiscountPercentage(0L);
+                  }
 
                   orderItemEntity.setProductMediaUrls(productEntity.getMedia().getUrls());
                   orderItemEntity.setQuantity(it.getQuantity());
 
                   long totalAmountBeforeDiscount =
                       orderItemEntity.getProductPrice() * orderItemEntity.getQuantity();
-                  long totalDiscount = isProductDiscountValid ?
+                  long totalDiscount =
                       orderItemEntity.getProductDiscountPercentage()
                           * orderItemEntity.getProductPrice()
                           * orderItemEntity.getQuantity()
-                          / 100 : 0;
+                          / 100;
                   long totalAmountAfterDiscount = totalAmountBeforeDiscount - totalDiscount;
 
                   orderCheckoutResponseDto.setTotalAmountBeforeDiscount(
