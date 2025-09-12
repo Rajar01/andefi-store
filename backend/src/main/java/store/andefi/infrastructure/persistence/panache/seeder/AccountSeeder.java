@@ -13,7 +13,7 @@ import store.andefi.infrastructure.security.BCryptPasswordHasher;
 import java.util.Locale;
 
 @ApplicationScoped
-@Priority(1)
+@Priority(2)
 public class AccountSeeder implements Seeder {
     @Inject
     AccountRepositoryImpl accountRepository;

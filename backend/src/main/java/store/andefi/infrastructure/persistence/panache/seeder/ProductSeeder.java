@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 @ApplicationScoped
-@Priority(1)
+@Priority(2)
 public class ProductSeeder implements Seeder {
     @Inject
     ProductRepositoryImpl productRepository;
