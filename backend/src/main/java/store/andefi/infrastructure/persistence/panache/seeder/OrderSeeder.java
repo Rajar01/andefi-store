@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import store.andefi.core.enums.TransactionStatus;
 import store.andefi.infrastructure.persistence.panache.entity.AccountPanacheEntity;
 import store.andefi.infrastructure.persistence.panache.entity.OrderItemPanacheEntity;
 import store.andefi.infrastructure.persistence.panache.entity.OrderPanacheEntity;
@@ -50,6 +51,7 @@ public class OrderSeeder implements Seeder {
                 .subTotal(0L)
                 .totalDiscount(0L)
                 .grandTotal(0L)
+                .transactionStatus(TransactionStatus.CAPTURE)
                 .account(accountPanacheEntity)
                 .build();
 

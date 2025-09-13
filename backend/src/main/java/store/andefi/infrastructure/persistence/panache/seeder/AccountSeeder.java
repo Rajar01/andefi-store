@@ -51,6 +51,7 @@ public class AccountSeeder implements Seeder {
             .fullName(faker.name().fullName())
             .phoneNumber("+6281234567892")
             .role(Role.CUSTOMER)
+            .shippingAddress(ShippingAddressPanacheEntity.builder().address(faker.address().fullAddress()).postalCode(faker.address().zipCode()).build())
             .build();
 
         accountRepository.getEntityManager().persist(customerTwoAccountPanacheEntity);
